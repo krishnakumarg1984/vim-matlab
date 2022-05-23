@@ -7,9 +7,9 @@ import re
 import time
 
 import pynvim
-import python_vim_utils
+from matlab_cli_controller import MatlabCliController
+# import python_vim_utils
 
-# from matlab_cli_controller import MatlabCliController
 # from python_vim_utils import PythonVimUtils as vim_helper
 #
 # __created__ = "Mar 01, 2015"
