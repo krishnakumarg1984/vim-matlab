@@ -1,6 +1,6 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
-__author__ = 'daeyun'
+__author__ = "daeyun"
 
 use_pexpect = True
 if use_pexpect:
@@ -35,8 +35,12 @@ class Matlab:
         if use_pexpect:
             self.proc = pexpect.spawn("matlab", ["-nosplash", "-nodesktop"])
         else:
-            self.proc = Popen(["matlab", "-nosplash", "-nodesktop"], stdin=PIPE,
-                              close_fds=True, preexec_fn=os.setsid)
+            self.proc = Popen(
+                ["matlab", "-nosplash", "-nodesktop"],
+                stdin=PIPE,
+                close_fds=True,
+                preexec_fn=os.setsid,
+            )
         return self.proc
 
     def cancel(self):
@@ -50,20 +54,22 @@ class Matlab:
 
     def run_code(self, code, run_timer=True):
         num_retry = 0
-        rand_var = ''.join(
-            random.choice(string.ascii_uppercase) for _ in range(12))
+        rand_var = "".join(random.choice(string.ascii_uppercase) for _ in range(12))
 
         if run_timer:
-            command = ("{randvar}=tic;{code},try,toc({randvar}),catch,end"
-                       ",clear('{randvar}');\n").format(randvar=rand_var,
-                                                        code=code.strip())
+            command = (
+                "{randvar}=tic;{code},try,toc({randvar}),catch,end"
+                ",clear('{randvar}');\n"
+            ).format(randvar=rand_var, code=code.strip())
         else:
             command = "{}\n".format(code.strip())
 
         # The maximum number of characters allowed on a single line in Matlab's CLI is 4096.
-        delim = ' ...\n'
+        delim = " ...\n"
         line_size = 4095 - len(delim)
-        command = delim.join([command[i:i+line_size] for i in range(0, len(command), line_size)])
+        command = delim.join(
+            [command[i : i + line_size] for i in range(0, len(command), line_size)]
+        )
 
         global hide_until_newline
         while num_retry < 3:
@@ -76,7 +82,7 @@ class Matlab:
                     self.proc.stdin.flush()
                 break
             except Exception as ex:
-                print ex
+                print(ex)
                 self.launch_process()
                 num_retry += 1
                 time.sleep(1)
@@ -91,18 +97,18 @@ class TCPHandler(SocketServer.StreamRequestHandler):
             if not msg:
                 break
             msg = msg.strip()
-            print_flush((msg[:74] + '...') if len(msg) > 74 else msg, end='')
+            print_flush((msg[:74] + "...") if len(msg) > 74 else msg, end="")
 
             options = {
-                'kill': self.server.matlab.kill,
-                'cancel': self.server.matlab.cancel,
+                "kill": self.server.matlab.kill,
+                "cancel": self.server.matlab.cancel,
             }
 
             if msg in options:
                 options[msg]()
             else:
                 self.server.matlab.run_code(msg)
-        print_flush('Connection closed: {}'.format(self.client_address))
+        print_flush("Connection closed: {}".format(self.client_address))
 
 
 def status_monitor_thread(matlab):
@@ -133,19 +139,19 @@ def output_filter(output_string):
     """
     global hide_until_newline
     if hide_until_newline:
-        if '\n' in output_string:
+        if "\n" in output_string:
             hide_until_newline = False
-            return output_string[output_string.find('\n'):]
+            return output_string[output_string.find("\n") :]
         else:
-            return ''
+            return ""
     else:
         return output_string
 
 
 def input_filter(input_string):
     # Detect C-\
-    if input_string == '\x1c':
-        print_flush('Terminating')
+    if input_string == "\x1c":
+        print_flush("Terminating")
         global auto_restart
         auto_restart = False
     return input_string
@@ -154,7 +160,7 @@ def input_filter(input_string):
 def forward_input(matlab):
     """Forward stdin to Matlab.proc's stdin."""
     if use_pexpect:
-        matlab.proc.interact(input_filter=input_filter,output_filter=output_filter)
+        matlab.proc.interact(input_filter=input_filter, output_filter=output_filter)
     else:
         while True:
             matlab.proc.stdin.write(stdin.readline())
@@ -166,10 +172,10 @@ def start_thread(target=None, args=()):
     thread.start()
 
 
-def print_flush(value, end='\n'):
+def print_flush(value, end="\n"):
     """Manually flush the line if using pexpect."""
     if use_pexpect:
-        value += '\b' * len(value)
+        value += "\b" * len(value)
     sys.stdout.write(value + end)
     sys.stdout.flush()
 
