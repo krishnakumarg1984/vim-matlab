@@ -7,7 +7,8 @@ import re
 import time
 
 import pynvim
-from matlab_cli_controller import MatlabCliController
+from vim_matlab.matlab_cli_controller import MatlabCliController
+
 # import python_vim_utils
 
 # from python_vim_utils import PythonVimUtils as vim_helper
