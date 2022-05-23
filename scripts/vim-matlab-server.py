@@ -174,6 +174,7 @@ def start_thread(target=None, args=()):
 
 def print_flush(value, end="\n"):
     """Manually flush the line if using pexpect."""
+    value = str(value)
     if use_pexpect:
         value += "\b" * len(value)
     sys.stdout.write(value + end)
