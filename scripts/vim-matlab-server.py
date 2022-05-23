@@ -11,7 +11,7 @@ if use_pexpect:
 if not use_pexpect:
     from subprocess import Popen, PIPE
 
-import SocketServer
+import socketserver
 import os
 import random
 import signal
@@ -88,7 +88,7 @@ class Matlab:
                 time.sleep(1)
 
 
-class TCPHandler(SocketServer.StreamRequestHandler):
+class TCPHandler(socketserver.StreamRequestHandler):
     def handle(self):
         print_flush("New connection: {}".format(self.client_address))
 
@@ -182,10 +182,10 @@ def print_flush(value, end="\n"):
 
 def main():
     host, port = "localhost", 43889
-    SocketServer.TCPServer.allow_reuse_address = True
+    socketserver.TCPServer.allow_reuse_address = True
 
     global server
-    server = SocketServer.TCPServer((host, port), TCPHandler)
+    server = socketserver.TCPServer((host, port), TCPHandler)
     server.matlab = Matlab()
 
     start_thread(target=forward_input, args=(server.matlab,))
