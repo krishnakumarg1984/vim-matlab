@@ -35,6 +35,8 @@ class Command(object):
         if thread.is_alive():
             self.process.terminate()
             thread.join()
-            logger.log.error("Timeout: " + self.cmd)
-            raise TimeoutError("Timeout: " + self.cmd + " " + logger.log_path)
+            vim_matlab.logger.log.error("Timeout: " + self.cmd)
+            raise TimeoutError(
+                "Timeout: " + self.cmd + " " + vim_matlab.logger.log_path
+            )
         return self.stdout, self.stderr, self.process.returncode

@@ -26,10 +26,10 @@ class MatlabCliController:
         while num_retry < 3:
             try:
                 self.sock.sendall(code + "\n")
-                logger.log.info(code)
+                vim_matlab.logger.log.info(code)
                 break
             except Exception as ex:
-                logger.log.error(ex)
+                vim_matlab.logger.log.error(ex)
                 self.connect_to_server()
                 num_retry += 1
                 time.sleep(1)
