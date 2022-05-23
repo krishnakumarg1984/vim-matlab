@@ -18,6 +18,7 @@ class MatlabCliController:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((self.host, self.port))
         Timer(5, self.setup_matlab_path).start()
+        self.sock.sendall(b"Hello, world")
 
     def run_code(self, lines):
         code = ",".join(lines)
