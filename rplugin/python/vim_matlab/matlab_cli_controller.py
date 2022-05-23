@@ -3,8 +3,7 @@ from threading import Timer
 
 from io_helper import find_plugin_matlab_path
 
-
-__author__ = 'daeyun'
+__author__ = "daeyun"
 
 import socket
 import logger
@@ -21,7 +20,7 @@ class MatlabCliController:
         Timer(5, self.setup_matlab_path).start()
 
     def run_code(self, lines):
-        code = ','.join(lines)
+        code = ",".join(lines)
 
         num_retry = 0
         while num_retry < 3:
