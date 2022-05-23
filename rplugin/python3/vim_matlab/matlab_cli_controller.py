@@ -1,12 +1,12 @@
 import time
 from threading import Timer
 
-from io_helper import find_plugin_matlab_path
+from vim_matlab.io_helper import find_plugin_matlab_path
 
 __author__ = "daeyun"
 
 import socket
-import logger
+import vim_matlab.logger
 
 
 class MatlabCliController:
